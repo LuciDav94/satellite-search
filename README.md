@@ -20,7 +20,7 @@ file for the Nginx server, and the application.properties file used to define ba
 Vite for build and development server, and Yarn for dependency management. The design incorporates 
 components imported from mui.com.
 
-                      - Execute yarn build to generate the 'dist' folder with the sources
+                      - Execute yarn install than yarn build to generate the 'dist' folder with the sources
 
 ## **Project description**
 
