@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Logback Configuration                                                  -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<configuration>
+    <!-- include spring default values to use CONSOLE_LOG_PATTERN -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!--Properties-->
+    <property name="logsFolder" value="./logs"/>
+    <property name="filePrefix" value="${logsFolder}/%d{yyyy-MM-dd}_satellite"/>
+
+
+    <!-- ============================== -->
+    <!-- Append messages to the console -->
+    <!-- ============================== -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- ================================= -->
+    <!-- Preserve debug messages in a local file -->
+    <!-- ================================= -->
+    <appender name="DEBUG_FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logsFolder}/satellite-debug.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d %-5p %-10.10X{sessionID} %-14.14X{reqID} %t [%c{1}:%L] %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${filePrefix}-debug.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ================ -->
+    <!-- Limit categories -->
+    <!-- ================ -->
+
+    <!-- Limit the org.hibernate Logger to warn -->
+    <logger name="org.hibernate" level="warn"/>
+
+    <!--To avoid the narrowing proxy to class warnings -->
+    <logger name="org.hibernate.engine.internal.StatefulPersistenceContext" level="error"/>
+
+    <logger name="org.hibernate.event.def.AbstractFlushingEventListener" level="fatal"/>
+
+    <logger name="com.mchange.v2" level="warn"/>
+
+    <logger name="net.sf.ehcache" level="warn"/>
+
+    <logger name="org.springframework.security" level="warn"/>
+
+    <logger name="org.apache" level="warn"/>
+
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="debug"/>
+
+    <root level="debug">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="DEBUG_FILE"/>
+    </root>
+</configuration>

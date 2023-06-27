@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  postgres:
+      image: postgres:15
+      environment:
+        POSTGRES_DB: satellite
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+   
+  java-server:
+      image: openjdk:17
+      ports:
+        - 8080:8080
+      depends_on:
+        - postgres
+      volumes:
+        - ./app/:/opt/app/
+      working_dir: /opt/app
+      command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 5; done; java -Xmx512m -jar satellite-backend.jar'
+
+  react-app:
+       image: nginx:latest
+       ports:
+        - 3000:80
+       volumes:
+        - ./app/dist:/usr/share/nginx/html
+        - ./app/nginx.conf:/etc/nginx/nginx.conf
+       depends_on:
+        - java-server 
+       environment:
+        NODE_ENV: production   
