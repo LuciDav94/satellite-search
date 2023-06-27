@@ -16,6 +16,7 @@ file for the Nginx server, and the application.properties file used to define ba
 ## **Project structure**
 
 -> satellite-backend - Server written in Java with Spring Boot and Postgres for the database.
+                     - Java 17 is required to compile the code
  
                      - Execute mvn clean package to execute tests and generate the JAR file
 
